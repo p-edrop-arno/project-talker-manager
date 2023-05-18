@@ -12,9 +12,18 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', async (req, res) => {
+app.get('/talker', async (_req, res) => {
   const talkers = await getTalkerData();
   return res.status(200).json(talkers);
+});
+
+app.get('/talker/:id', async (req, res) => {
+  const talkers = await getTalkerData();
+  const talkerId = talkers.find(({ id }) => id === +(req.params.id));
+  if (!talkerId) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  return res.status(200).json(talkerId);
 });
 
 app.listen(PORT, () => {
