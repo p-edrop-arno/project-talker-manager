@@ -27,6 +27,8 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(200).json(talkerId);
 });
 
+// link da documentação do randomBytes para geração do token aleatório
+// https://nodejs.org/dist/latest-v14.x/docs/api/crypto.html#crypto_crypto_randombytes_size_callback
 const generateToken = () => {
   const token = crypto.randomBytes(8).toString('hex');
   return token;
