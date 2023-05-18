@@ -1,6 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const { getTalkerData } = require('./utils/readWrite');
+const { validLogin } = require('./middlewares/loginValidation');
 
 const app = express();
 app.use(express.json());
@@ -34,9 +35,9 @@ const generateToken = () => {
   return token;
 };
 
-app.post('/login', async (_req, res) => {
+app.post('/login', validLogin, async (_req, res) => {
   const token = generateToken();
-return res.status(200).json({ token })
+return res.status(200).json({ token });
 });
 
 app.listen(PORT, () => {
