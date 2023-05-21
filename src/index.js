@@ -3,8 +3,8 @@ const crypto = require('crypto');
 const { getTalkerData, addTalkerData } = require('./utils/readWrite');
 const { validLogin } = require('./middlewares/loginValidation');
 const { validToken } = require('./middlewares/tokenValidation');
-const { validateAge, validateName, validateTalk, validateRate, validateWatch } = require('./middlewares/userValidation');
-
+const { validateAge, validateName, validateTalk,
+  validateRate, validateWatch } = require('./middlewares/userValidation');
 
 const app = express();
 app.use(express.json());
@@ -43,7 +43,7 @@ app.post('/login', validLogin, async (_req, res) => {
 return res.status(200).json({ token });
 });
 
-app.post('/talker', validToken, validateName,validateAge,
+app.post('/talker', validToken, validateName, validateAge,
 validateTalk, validateRate, validateWatch, async (req, res) => {
   const { name, age, talk } = req.body;
   const talker = await getTalkerData();
