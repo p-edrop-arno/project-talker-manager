@@ -17,4 +17,11 @@ const getTalkerData = async () => {
   return dataBaseFile;
 };
 
-module.exports = { getTalkerData };
+const addTalkerData = async (newTalker) => {
+  const talkerData = getDataBase;
+  const addTalker = JSON.parse(talkerData);
+  addTalker.push(newTalker);
+  await fs.writeFile('src/talker.json', JSON.stringify(newTalker));
+};
+
+module.exports = { getTalkerData, addTalkerData };
