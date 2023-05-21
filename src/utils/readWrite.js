@@ -18,10 +18,15 @@ const getTalkerData = async () => {
 };
 
 const addTalkerData = async (newTalker) => {
-  const talkerData = getDataBase;
-  const addTalker = JSON.parse(talkerData);
-  addTalker.push(newTalker);
-  await fs.writeFile('src/talker.json', JSON.stringify(newTalker));
+  try {
+    const talkerData = await fs.readFile(talkerDataPath, 'utf8');
+    const talkerArray = JSON.parse(talkerData);
+    talkerArray.push(newTalker);
+    await fs.writeFile('src/talker.json', JSON.stringify(talkerArray));
+  } catch (error) {
+    const err = new Error('Can not add data');
+    throw err;
+  }
 };
 
 module.exports = { getTalkerData, addTalkerData };

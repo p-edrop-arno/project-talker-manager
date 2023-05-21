@@ -58,30 +58,24 @@ validateTalk, validateRate, validateWatch, async (req, res) => {
   return res.status(201).json(createTalker);
 });
 
-/* app.put('/talker/:id', validToken, validateName, validateAge,
+app.put('/talker/:id', validToken, validateName, validateAge,
 validateTalk, validateRate, validateWatch, async (req, res) => {
   const { body } = req;
   const { id } = req.params;
   const peek = await getTalkerData();
   const idTalker = peek.find((e) => e.id === +id);
     if (!idTalker) {
-      return res.status(404).json({
-        message: 'Pessoa palestrante não encontrada'
-      });
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }
   const getTalker = peek.map((e) => {
     if (e.id === +id) {
-      return {
-        id: e.id, ...body
-      };
+      return { id: e.id, ...body };
     }
     return e;
   });
   await addTalkerData(getTalker);
-    return res.status(200).json({
-      id: +id, ...body
-    });
-}); */
+    return res.status(200).json({ id: +id, ...body });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
