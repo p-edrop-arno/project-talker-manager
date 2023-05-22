@@ -7,7 +7,7 @@ const getDataBase = async () => {
     const data = await fs.readFile(talkerDataPath, 'utf-8');
     return JSON.parse(data);
   } catch (error) {
-    const err = new Error('Can not open file');
+    const err = new Error('Could not open file');
     throw err;
   }
 };
@@ -24,7 +24,7 @@ const writeTalkerData = async (newTalker) => {
     talkerArray.push(newTalker);
     await fs.writeFile(talkerDataPath, JSON.stringify(talkerArray));
   } catch (error) {
-    const err = new Error('Can not add data');
+    const err = new Error('Could not write data');
     throw err;
   }
 };
@@ -42,9 +42,22 @@ const updateTalkerData = async (talkerUpdate, id) => {
     await fs.writeFile(talkerDataPath, JSON.stringify(talkerUpdated));
     return talkerUpdated;
   } catch (error) {
-    const err = new Error('Can not update data');
+    const err = new Error('Could not update data');
     throw err;
   }
 };
 
-module.exports = { getTalkerData, writeTalkerData, updateTalkerData };
+const deleteTalkerData = async (id) => {
+  try {
+    const talkerFile = await fs.readFile(talkerDataPath, 'utf8');
+    const talkerBase = JSON.parse(talkerFile);
+    const removedTalkers = talkerBase.filter((talker) => talker.id !== +id);
+    await fs.writeFile(talkerDataPath, JSON.stringify(removedTalkers));
+    return removedTalkers;
+  } catch (error) {
+    const err = new Error('Could not delete data');
+    throw err;
+  }
+};
+
+module.exports = { getTalkerData, writeTalkerData, updateTalkerData, deleteTalkerData };

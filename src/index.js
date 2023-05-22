@@ -1,6 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-const { getTalkerData, writeTalkerData, updateTalkerData } = require('./utils/readWrite');
+const { getTalkerData, writeTalkerData, updateTalkerData, deleteTalkerData } = require('./utils/readWrite');
 const { validLogin } = require('./middlewares/loginValidation');
 const { validToken } = require('./middlewares/tokenValidation');
 const { validateAge, validateName, validateTalk,
@@ -74,6 +74,17 @@ validateTalk, validateRate, validateWatch, async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 });
+
+app.delete('/talker/:id', validToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await deleteTalkerData(id);
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json({ error: 'Could not delete talker data' });
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log('Online');
