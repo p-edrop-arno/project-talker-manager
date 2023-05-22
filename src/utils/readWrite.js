@@ -17,16 +17,34 @@ const getTalkerData = async () => {
   return dataBaseFile;
 };
 
-const addTalkerData = async (newTalker) => {
+const writeTalkerData = async (newTalker) => {
   try {
     const talkerData = await fs.readFile(talkerDataPath, 'utf8');
     const talkerArray = JSON.parse(talkerData);
     talkerArray.push(newTalker);
-    await fs.writeFile('src/talker.json', JSON.stringify(talkerArray));
+    await fs.writeFile(talkerDataPath, JSON.stringify(talkerArray));
   } catch (error) {
     const err = new Error('Can not add data');
     throw err;
   }
 };
 
-module.exports = { getTalkerData, addTalkerData };
+const updateTalkerData = async (talkerUpdate, id) => {
+  try {
+    const talkerFile = await fs.readFile(talkerDataPath, 'utf8');
+    const changeTalker = JSON.parse(talkerFile);
+    const talkerUpdated = changeTalker.map((talker) => {
+      if (talker.id === +id) {
+        return { ...talker, ...talkerUpdate };
+      }
+      return talker;
+    });
+    await fs.writeFile(talkerDataPath, JSON.stringify(talkerUpdated));
+    return talkerUpdated;
+  } catch (error) {
+    const err = new Error('Can not update data');
+    throw err;
+  }
+};
+
+module.exports = { getTalkerData, writeTalkerData, updateTalkerData };

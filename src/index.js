@@ -1,6 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-const { getTalkerData, addTalkerData } = require('./utils/readWrite');
+const { getTalkerData, writeTalkerData, updateTalkerData } = require('./utils/readWrite');
 const { validLogin } = require('./middlewares/loginValidation');
 const { validToken } = require('./middlewares/tokenValidation');
 const { validateAge, validateName, validateTalk,
@@ -54,27 +54,25 @@ validateTalk, validateRate, validateWatch, async (req, res) => {
     talk,
   };
   talker.push(createTalker);
-  await addTalkerData(createTalker);
+  await writeTalkerData(createTalker);
   return res.status(201).json(createTalker);
 });
 
+// necessidade de refatorar mas gostaria de agradecer ao Summer Pablo Souza por me auxliar nesse requisito
 app.put('/talker/:id', validToken, validateName, validateAge,
 validateTalk, validateRate, validateWatch, async (req, res) => {
   const { body } = req;
   const { id } = req.params;
-  const peek = await getTalkerData();
-  const idTalker = peek.find((e) => e.id === +id);
-    if (!idTalker) {
+  try {
+    const updatedTalker = await updateTalkerData(body, id);
+    const talkerUpdated = updatedTalker.find((talker) => talker.id === +id);
+    if (!talkerUpdated) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }
-  const getTalker = peek.map((e) => {
-    if (e.id === +id) {
-      return { id: e.id, ...body };
-    }
-    return e;
-  });
-  await addTalkerData(getTalker);
-    return res.status(200).json({ id: +id, ...body });
+    return res.status(200).json(talkerUpdated);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 });
 
 app.listen(PORT, () => {
