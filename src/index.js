@@ -1,6 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
-const { getTalkerData, writeTalkerData, updateTalkerData, deleteTalkerData } = require('./utils/readWrite');
+const { getTalkerData, writeTalkerData,
+  updateTalkerData, deleteTalkerData } = require('./utils/readWrite');
 const { validLogin } = require('./middlewares/loginValidation');
 const { validToken } = require('./middlewares/tokenValidation');
 const { validateAge, validateName, validateTalk,
@@ -85,6 +86,20 @@ app.delete('/talker/:id', validToken, async (req, res) => {
   }
 });
 
+app.get('/talker/search', validToken, async (req, res) => {
+  const searchTerm = req.query.q;
+  if (!searchTerm) {
+    const talkers = await getTalkerData();
+    return res.status(200).json(talkers);
+  }
+  const talkers = await getTalkerData();
+  const filteredTalkers = talkers.filter((talker) => {
+    const talkerName = talker.name.toLowerCase();
+    return talkerName.includes(searchTerm.toLowerCase());
+  });
+  
+  return res.status(200).json(filteredTalkers);
+});
 
 app.listen(PORT, () => {
   console.log('Online');
