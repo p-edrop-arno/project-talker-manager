@@ -59,7 +59,6 @@ validateTalk, validateRate, validateWatch, async (req, res) => {
   return res.status(201).json(createTalker);
 });
 
-// necessidade de refatorar mas gostaria de agradecer ao Summer Pablo Souza por me auxliar nesse requisito
 app.put('/talker/:id', validToken, validateName, validateAge,
 validateTalk, validateRate, validateWatch, async (req, res) => {
   const { body } = req;
